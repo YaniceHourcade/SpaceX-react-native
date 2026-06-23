@@ -1,31 +1,100 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import { askHuggingFace, ChatMessage } from "../services/huggingFaceAI";
 
 export default function App() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function send() {
+    if (!input.trim() || loading) return;
+
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: input,
+    };
+
+    const history = [...messages, userMessage];
+
+    setMessages(history);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const answer = await askHuggingFace(history);
+
+      setMessages([
+        ...history,
+        {
+          role: "assistant",
+          content: answer,
+        },
+      ]);
+    } catch (e) {
+      console.log("HF ERROR:", e);
+    }
+
+    setLoading(false);
+  }
+
   return (
-    <View className="flex-1 bg-white dark:bg-black items-center justify-center px-8">
-      {/* Heading */}
-      <Text className="text-4xl font-extrabold text-gray-800 dark:text-white mb-3 tracking-tight">
-        🚀 Welcome
-      </Text>
+    <View style={styles.container}>
+      <ScrollView style={styles.chat}>
+        {messages.map((m, i) => (
+          <Text
+            key={i}
+            style={{
+              marginBottom: 10,
+              color: m.role === "user" ? "blue" : "green",
+            }}
+          >
+            <Text style={{ fontWeight: "bold" }}>
+              {m.role === "user" ? "You: " : "AI Bot: "}
+            </Text>
+            {m.content}
+          </Text>
+        ))}
+      </ScrollView>
 
-      {/* Subheading */}
-      <Text className="text-xl dark:text-white text-gray-700 mb-8 text-center leading-relaxed">
-        Build beautiful apps with{" "}
-        <Text className="text-blue-500 font-semibold">
-          Expo (Router) + Uniwind 🔥
-        </Text>
-      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Ask a question..."
+        value={input}
+        onChangeText={setInput}
+      />
 
-      {/* Instruction text */}
-      <Text className="text-base text-gray-600 dark:text-white text-center max-w-sm">
-        Start customizing your app by editing{" "}
-        <Text className="font-semibold text-gray-800 dark:text-white">
-          app/index.tsx
-        </Text>
-      </Text>
-
-      <StatusBar style="dark" />
+      <Button
+        title={loading ? "Loading..." : "Send"}
+        onPress={send}
+        disabled={loading}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 60,
+  },
+  chat: {
+    flex: 1,
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#999",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+});
