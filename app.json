@@ -7,7 +7,7 @@
       "output": "static"
     },
     "plugins": ["expo-router"],
-    "name": "YnovTravelApp",
-    "slug": "YnovTravelApp"
+    "name": "SpaceX",
+    "slug": "SpaceX"
   }
 }
