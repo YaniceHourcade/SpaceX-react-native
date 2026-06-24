@@ -9,9 +9,16 @@ import { colors } from '../src/constants/colors';
 import { hasSeenOnboarding } from '../src/features/onboarding/storage/onboardingStorage';
 import React from 'react';
 
+const FORCE_ONBOARDING_FOR_TEST = true;
+
 export default function Splash() {
   useEffect(() => {
     const timer = setTimeout(async () => {
+      if (FORCE_ONBOARDING_FOR_TEST) {
+        router.replace('/onboarding');
+        return;
+      }
+
       const seen = await hasSeenOnboarding();
       router.replace(seen ? '/home' : '/onboarding');
     }, 1800);
