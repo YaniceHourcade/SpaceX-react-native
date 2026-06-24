@@ -14,9 +14,20 @@
           "backgroundColor": "#000000",
           "image": "./assets/images/spacex-logo-white.png",
           "imageWidth": 180,
-          "resizeMode": "contain"
+          "resizeMode": "contain",
+          "font" : [
+            {
+              "fontFamily": "RobotoCondensed_600Medium",
+              "asset": "./assets/fonts/RobotoCondensed-Medium.ttf"
+            },
+            {
+              "fontFamily": "RobotoCondensed_700Bold",
+              "asset": "./assets/fonts/RobotoCondensed-Bold.ttf"
+            }
+          ]
         }
-      ]
+      ],
+      "expo-font"
     ],
     "name": "SpaceX",
     "slug": "SpaceX"
