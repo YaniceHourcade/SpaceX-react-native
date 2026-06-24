@@ -3,6 +3,8 @@ import {
   Dimensions,
   FlatList,
   ImageSourcePropType,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   StyleSheet,
   Image,
   Text,
@@ -27,46 +29,42 @@ const WINDOW_HEIGHT = Dimensions.get('window').height;
 const logo = require('../../assets/images/spacex-logo-white.png');
 
 export function Slider({ items, onComplete }: SliderProps) {
-  const flatListRef = useRef<FlatList<SliderItem>>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const listRef = useRef<FlatList<SliderItem> | null>(null);
 
   const handleStartPress = () => {
     const isLastSlide = currentIndex === items.length - 1;
 
     if (!isLastSlide) {
-      const nextIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({
-        index: nextIndex,
+      listRef.current?.scrollToOffset({
+        offset: WINDOW_WIDTH * (currentIndex + 1),
         animated: true,
       });
-      setCurrentIndex(nextIndex);
       return;
     }
 
     onComplete();
   };
 
-  const handleMomentumScrollEnd = ({
-    nativeEvent,
-  }: {
-    nativeEvent: { contentOffset: { x: number } };
-  }) => {
-    const index = Math.round(nativeEvent.contentOffset.x / WINDOW_WIDTH);
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const index = Math.round(event.nativeEvent.contentOffset.x / WINDOW_WIDTH);
     setCurrentIndex(index);
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        ref={flatListRef}
+        ref={listRef}
+        data={items}
         horizontal
         pagingEnabled
-        bounces={false}
         showsHorizontalScrollIndicator={false}
-        data={items}
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
         keyExtractor={(item) => item.id}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
-        renderItem={({ item }) => (
+        style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
+        renderItem={({ item}) => (
           <View style={styles.slide}>
             <View style={styles.slideImage}>
               <Image source={item.image} style={styles.image} resizeMode="contain" />
@@ -81,9 +79,9 @@ export function Slider({ items, onComplete }: SliderProps) {
       />
 
       <View style={styles.dots}>
-        {items.map((slide, index) => (
+        {items.map((item, index) => (
           <View
-            key={slide.id}
+            key={item.id}
             style={[styles.dot, index === currentIndex ? styles.dotActive : styles.dotInactive]}
           />
         ))}
@@ -96,14 +94,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  
   slide: {
-    flex: 1,
-    top: -10,
+    width: WINDOW_WIDTH,
+    height: WINDOW_HEIGHT,
+    top: -10
   },
   slideImage: {
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT * 0.69,
-    top: -10,
+    top: -10
   },
   image: {
     width: '100%',
@@ -123,6 +123,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: 1,
+    textAlign: 'center',
+  },
+  flatList: {
+    flex: 1,
+  },
+  flatListContent: {
+    width: WINDOW_WIDTH * 3,
   },
   dots: {
     position: 'absolute',

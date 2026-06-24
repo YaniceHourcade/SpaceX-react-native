@@ -5,6 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 import { Slider } from '../components/slider';
 import { useAsyncStorage } from '../hooks/use-async-storage';
 
+export const options = {
+  animation: 'fade',
+};
+
 const items = [
   {
     id: '1',
@@ -28,8 +32,8 @@ export default function Onboarding() {
   const [_, setOnboardingCompleted] = useAsyncStorage('onboardingCompleted', false);
 
   const onComplete = async () => {
-    await setOnboardingCompleted(true);
-    router.replace('/');
+    setOnboardingCompleted(true);
+    router.replace("/");
   };
 
   return (

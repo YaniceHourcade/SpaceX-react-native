@@ -9,7 +9,7 @@ import {
 } from '@expo-google-fonts/roboto-condensed';
 
 export const unstable_settings = {
-  initialRouteName: 'onboarding',
+  initialRouteName: 'index',
 };
 
 export default function Layout() {
@@ -33,5 +33,5 @@ export default function Layout() {
       : [text.defaultProps.style].filter(Boolean)),
   ];
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return <Stack initialRouteName="index" screenOptions={{ headerShown: false }} />;
 }
