@@ -5,18 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 
 const { width, height } = Dimensions.get('window');
 const animationImage = require('../../assets/images/animation.png');
-
-// 👇 dimensions réelles du fichier image (telles qu'enregistrées dans l'asset)
-const { width: imageNaturalWidth, height: imageNaturalHeight } =
-  Image.resolveAssetSource(animationImage);
-
-// 👇 on affiche l'image en pleine largeur, en conservant ses proportions d'origine
+const { width: imageNaturalWidth, height: imageNaturalHeight } = Image.resolveAssetSource(animationImage);
 const renderedImageWidth = width;
 const renderedImageHeight = width * (imageNaturalHeight / imageNaturalWidth);
-
-// 👇 on scrolle exactement assez pour amener le bas de l'image au bas de l'écran
 const splashTargetY = -Math.max(renderedImageHeight - height, 0);
-
 const HOLD_DURATION = 800;
 
 export default function Splash() {
@@ -69,7 +61,17 @@ export default function Splash() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000000' },
-  clip: { flex: 1, overflow: 'hidden' },
-  image: { position: 'absolute', top: 0, left: 0 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#000000' 
+  },
+  clip: { 
+    flex: 1, 
+    overflow: 'hidden' 
+  },
+  image: { 
+    position: 'absolute', 
+    top: 0, 
+    left: 0 
+  },
 });
