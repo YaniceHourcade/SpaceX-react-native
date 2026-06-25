@@ -6,24 +6,34 @@ import { StatusBar } from 'expo-status-bar';
 const { width, height } = Dimensions.get('window');
 const animationImage = require('../../assets/images/animation.png');
 const splashTargetY = -height * 2.2;
-
-export const options = {
-  animation: 'slide_from_right',
-};
+const HOLD_DURATION = 800;
 
 export default function Splash() {
   const router = useRouter();
   const animation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    router.prefetch('/onboarding');
+
+    let holdTimeout: ReturnType<typeof setTimeout>;
+
     animation.setValue(0);
-    Animated.timing(animation, {
+    const anim = Animated.timing(animation, {
       toValue: splashTargetY,
       duration: 6000,
       useNativeDriver: true,
-    }).start(() => {
-      router.replace('/onboarding');
     });
+
+    anim.start(() => {
+      holdTimeout = setTimeout(() => {
+        router.replace('/onboarding');
+      }, HOLD_DURATION);
+    });
+
+    return () => {
+      anim.stop();
+      clearTimeout(holdTimeout);
+    };
   }, [animation, router]);
 
   return (
@@ -41,19 +51,7 @@ export default function Splash() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  clip: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-  image: {
-    width,
-    height: height * 3,
-    position: 'absolute',
-    top: 175,
-    left: 0,
-  },
+  container: { flex: 1, backgroundColor: '#000000' },
+  clip: { flex: 1, overflow: 'hidden' },
+  image: { width, height: height * 3, position: 'absolute', top: 173, left: 0 },
 });

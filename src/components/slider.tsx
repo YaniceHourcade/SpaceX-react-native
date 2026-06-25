@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import {
+  Animated,
   Dimensions,
   FlatList,
   ImageSourcePropType,
@@ -22,17 +23,23 @@ export interface SliderItem {
 interface SliderProps {
   items: SliderItem[];
   onComplete: () => void;
+  contentOpacity: Animated.Value;
+  interactionsEnabled: boolean;
 }
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const logo = require('../../assets/images/spacex-logo-white.png');
 
-export function Slider({ items, onComplete }: SliderProps) {
+export function Slider({ items, onComplete, contentOpacity, interactionsEnabled }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<FlatList<SliderItem> | null>(null);
 
   const handleStartPress = () => {
+    if (!interactionsEnabled) {
+      return;
+    }
+
     const isLastSlide = currentIndex === items.length - 1;
 
     if (!isLastSlide) {
@@ -58,34 +65,35 @@ export function Slider({ items, onComplete }: SliderProps) {
         data={items}
         horizontal
         pagingEnabled
+        scrollEnabled={interactionsEnabled}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={handleScroll}
         keyExtractor={(item) => item.id}
         style={styles.flatList}
         contentContainerStyle={styles.flatListContent}
-        renderItem={({ item}) => (
+        renderItem={({ item }) => (
           <View style={styles.slide}>
             <View style={styles.slideImage}>
               <Image source={item.image} style={styles.image} resizeMode="contain" />
             </View>
-            <View style={styles.content}>
+            <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
               <Image source={logo} style={styles.logo} />
               <Text style={styles.description}>{item.description}</Text>
               <Button onPress={handleStartPress}>START</Button>
-            </View>
+            </Animated.View>
           </View>
         )}
       />
 
-      <View style={styles.dots}>
+      <Animated.View style={[styles.dots, { opacity: contentOpacity }]}>
         {items.map((item, index) => (
           <View
             key={item.id}
             style={[styles.dot, index === currentIndex ? styles.dotActive : styles.dotInactive]}
           />
         ))}
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -94,16 +102,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  
   slide: {
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT,
-    top: -10
+    top: -10,
   },
   slideImage: {
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT * 0.69,
-    top: -10
+    top: -10,
   },
   image: {
     width: '100%',

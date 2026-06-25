@@ -7,8 +7,8 @@ export const unstable_settings = {
 export default function Layout() {
   return (
     <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
-      <Stack.Screen name="splash" options={{ animation: 'slide_from_right' }} />
+      <Stack.Screen name="onboarding" options={{ animation: 'none' }} />
+      <Stack.Screen name="splash" options={{ animation: 'fade' }} />
     </Stack>
   );
 }
