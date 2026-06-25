@@ -1,5 +1,6 @@
 import { StyleSheet, Pressable, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export function HomeTopBar() {
   return (
@@ -21,7 +22,7 @@ export function HomeTopBar() {
 
         <Pressable
           style={styles.iconButton}
-          onPress={() => console.log('IA')}
+          onPress={() => router.push('/chatAI')}
           hitSlop={10}
         >
           <Ionicons name="sparkles-outline" size={24} color="#ffffff" />
