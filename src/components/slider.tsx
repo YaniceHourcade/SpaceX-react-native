@@ -11,7 +11,6 @@ import {
   Text,
   View,
 } from 'react-native';
-
 import { Button } from './button';
 
 export interface SliderItem {
@@ -34,13 +33,13 @@ const logo = require('../../assets/images/spacex-logo-white.png');
 export function Slider({ items, onComplete, contentOpacity, interactionsEnabled }: SliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<FlatList<SliderItem> | null>(null);
-
+  const isLastSlide = currentIndex === items.length - 1;
   const handleStartPress = () => {
     if (!interactionsEnabled) {
       return;
     }
 
-    const isLastSlide = currentIndex === items.length - 1;
+    
 
     if (!isLastSlide) {
       listRef.current?.scrollToOffset({
@@ -58,6 +57,8 @@ export function Slider({ items, onComplete, contentOpacity, interactionsEnabled 
     setCurrentIndex(index);
   };
 
+  const currentDescription = items[currentIndex]?.description || '';
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -71,20 +72,24 @@ export function Slider({ items, onComplete, contentOpacity, interactionsEnabled 
         onScroll={handleScroll}
         keyExtractor={(item) => item.id}
         style={styles.flatList}
-        contentContainerStyle={styles.flatListContent}
         renderItem={({ item }) => (
           <View style={styles.slide}>
             <View style={styles.slideImage}>
               <Image source={item.image} style={styles.image} resizeMode="contain" />
             </View>
-            <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
-              <Image source={logo} style={styles.logo} />
-              <Text style={styles.description}>{item.description}</Text>
-              <Button onPress={handleStartPress}>START</Button>
-            </Animated.View>
           </View>
         )}
       />
+
+      <Animated.View style={[styles.contentContainer, { opacity: contentOpacity }]}>
+        <Image source={logo} style={styles.logo} />
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.description}>{currentDescription}</Text>
+        </View>
+        <Button onPress={handleStartPress}>
+          {isLastSlide ? 'START' : 'CONTINUER'}
+        </Button>
+      </Animated.View>
 
       <Animated.View style={[styles.dots, { opacity: contentOpacity }]}>
         {items.map((item, index) => (
@@ -101,11 +106,12 @@ export function Slider({ items, onComplete, contentOpacity, interactionsEnabled 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000',
   },
   slide: {
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT,
-    top: -10,
+    top: -10, 
   },
   slideImage: {
     width: WINDOW_WIDTH,
@@ -116,28 +122,34 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '117%',
   },
-  content: {
+  contentContainer: {
+    position: 'absolute',
+    bottom: 120, 
+    left: 0,
+    right: 0,
     alignItems: 'center',
     gap: 24,
   },
   logo: {
     width: 195,
     height: 24,
-    marginLeft: 24,
+  },
+  descriptionContainer: {
+    width: 240,
+    height: 40, // Hauteur fixe pour que le bouton en dessous ne bouge pas d'un poil
+    justifyContent: 'center', // Centre verticalement le texte
+    alignItems: 'center',     // Centre horizontalement le texte
   },
   description: {
     color: '#FFFFFF',
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 20,
     letterSpacing: 1,
     textAlign: 'center',
     fontFamily: 'RobotoCondensed_400Regular',
   },
   flatList: {
     flex: 1,
-  },
-  flatListContent: {
-    width: WINDOW_WIDTH * 3,
   },
   dots: {
     position: 'absolute',

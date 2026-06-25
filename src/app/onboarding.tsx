@@ -10,17 +10,17 @@ const items = [
   {
     id: '1',
     image: require('../../assets/images/onboarding-2.png'),
-    description: 'En avant...',
+    description: 'Explorez de nouveaux horizons.',
   },
   {
     id: '2',
     image: require('../../assets/images/onboarding-1.png'),
-    description: 'Prêt ?',
+    description: 'Préparez le lancement pour le décollage de la fusée.',
   },
   {
     id: '3',
     image: require('../../assets/images/onboarding-3.png'),
-    description: 'Décollage !',
+    description: 'Destination : Mars.',
   },
 ];
 
