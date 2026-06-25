@@ -1,6 +1,6 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Launch } from '../../../types/spacedevs';
+import { Launch } from '../types/spacedevs';
 
 type LaunchCardProps = {
   launch: Launch;
@@ -15,7 +15,7 @@ export function LaunchCard({ launch, large = false }: LaunchCardProps) {
       source={
         launch.image
           ? { uri: launch.image }
-          : require('../../../../assets/images/launch-placeholder.png')
+          : require('../../assets/images/launch-placeholder.png')
       }
       style={[styles.card, large && styles.largeCard]}
       imageStyle={styles.image}
@@ -28,7 +28,7 @@ export function LaunchCard({ launch, large = false }: LaunchCardProps) {
 
       <View style={styles.content}>
         <Text style={styles.date}>{date}</Text>
-        <Text numberOfLines={1} style={styles.title}>
+        <Text numberOfLines={2} style={styles.title}>
           {launch.name}
         </Text>
       </View>
@@ -52,17 +52,17 @@ function formatLaunchDate(value?: string | null) {
 
 const styles = StyleSheet.create({
   card: {
-    height: 116,
-    borderRadius: 12,
+    height: 180,
+    borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#111111',
     marginBottom: 14,
   },
   largeCard: {
-    height: 150,
+    height: 180,
   },
   image: {
-    borderRadius: 12,
+    borderRadius: 16,
   },
   content: {
     flex: 1,
@@ -71,16 +71,18 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   date: {
-    color: '#4EA3FF',
+    color: '#60BCF0',
+    fontFamily: 'Roboto Condensed',
     fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 0.8,
+    fontWeight: '500',
+    letterSpacing: 1,
     marginBottom: 4,
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '900',
+    fontFamily: 'Roboto Condensed',
+    fontSize: 14,
+    fontWeight: '700',
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },

@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import { usePastLaunches, useUpcomingLaunches } from '../../../hooks/useLaunches';
+import { usePastLaunches, useUpcomingLaunches } from '../hooks/useLaunches';
 import { HomeTopBar } from '../components/HomeTopBar';
 import { LaunchCard } from '../components/LaunchCard';
 
@@ -19,14 +19,14 @@ export function HomeScreen() {
     loading: upcomingLoading,
     error: upcomingError,
     fetch: refetchUpcoming,
-  } = useUpcomingLaunches({ limit: 1 });
+  } = useUpcomingLaunches({ limit: 5 });
 
   const {
     launches: pastLaunches,
     loading: pastLoading,
     error: pastError,
     fetch: refetchPast,
-  } = usePastLaunches({ limit: 10 });
+  } = usePastLaunches({ limit: 5 });
 
   const loading = upcomingLoading || pastLoading;
   const error = upcomingError || pastError;
@@ -96,12 +96,14 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   sectionTitle: {
-    color: '#8A8A8A',
+    color: '#ffffff',
+    fontFamily: 'Roboto Condensed',
     fontSize: 10,
-    fontWeight: '900',
+    fontWeight: '700',
     letterSpacing: 1.2,
     marginBottom: 10,
     textTransform: 'uppercase',
+    opacity: 0.6,
   },
   center: {
     minHeight: 300,
