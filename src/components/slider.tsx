@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 195,
     height: 24,
+    marginLeft: 24,
   },
   descriptionContainer: {
     width: 240,
