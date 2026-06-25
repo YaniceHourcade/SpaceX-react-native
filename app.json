@@ -6,8 +6,20 @@
     "web": {
       "output": "static"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "name": "SpaceX",
-    "slug": "SpaceX"
+    "slug": "SpaceX",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "479ec383-7876-4cbe-995b-84dc899bfe3f"
+      }
+    },
+    "owner": "suraya_a",
+    "android": {
+      "package": "com.suraya_a.SpaceX"
+    }
   }
 }
