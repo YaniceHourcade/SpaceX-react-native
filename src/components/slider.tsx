@@ -65,7 +65,7 @@ export function Slider({ items, onComplete, contentOpacity, interactionsEnabled 
         data={items}
         horizontal
         pagingEnabled
-        scrollEnabled={interactionsEnabled}
+        scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={handleScroll}
