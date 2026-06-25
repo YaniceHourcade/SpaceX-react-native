@@ -35,11 +35,10 @@ export function Slider({ items, onComplete, contentOpacity, interactionsEnabled 
   const listRef = useRef<FlatList<SliderItem> | null>(null);
   const isLastSlide = currentIndex === items.length - 1;
   const handleStartPress = () => {
+
     if (!interactionsEnabled) {
       return;
     }
-
-    
 
     if (!isLastSlide) {
       listRef.current?.scrollToOffset({
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
   slide: {
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT,
-    top: -10, 
+    top: -15, 
   },
   slideImage: {
     width: WINDOW_WIDTH,
@@ -124,11 +123,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     position: 'absolute',
-    bottom: 120, 
+    bottom: 125, 
     left: 0,
     right: 0,
     alignItems: 'center',
-    gap: 24,
+    gap: 20,
   },
   logo: {
     width: 195,
@@ -137,14 +136,14 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     width: 240,
-    height: 40, // Hauteur fixe pour que le bouton en dessous ne bouge pas d'un poil
-    justifyContent: 'center', // Centre verticalement le texte
-    alignItems: 'center',     // Centre horizontalement le texte
+    height: 48, 
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   description: {
     color: '#FFFFFF',
     fontSize: 16,
-    lineHeight: 20,
+    lineHeight: 24,
     letterSpacing: 1,
     textAlign: 'center',
     fontFamily: 'RobotoCondensed_400Regular',
