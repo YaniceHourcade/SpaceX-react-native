@@ -1,11 +1,24 @@
-import { View, Text } from "react-native";
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
-export default function App() {
-  return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 8 }}>
-        SpaceX App
-      </Text>
-    </View>
-  );
+import { useAsyncStorage } from '../hooks/use-async-storage';
+
+export default function Home() {
+  const router = useRouter();
+  const [onboardingCompleted, , onboardingCompletedLoading] = useAsyncStorage('onboardingCompleted', false);
+
+  useEffect(() => {
+    if (onboardingCompletedLoading) {
+      return;
+    }
+
+    if (onboardingCompleted) {
+      router.replace('/(tabs)');
+      return;
+    }
+
+    router.replace('/splash');
+  }, [onboardingCompleted, onboardingCompletedLoading, router]);
+
+  return null;
 }
