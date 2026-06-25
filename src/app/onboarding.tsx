@@ -15,7 +15,7 @@ const items = [
   {
     id: '2',
     image: require('../../assets/images/onboarding-1.png'),
-    description: 'Préparez le lancement pour le décollage de la fusée.',
+    description: 'Discover all upcoming and past rocket launches of SpaceX.',
   },
   {
     id: '3',

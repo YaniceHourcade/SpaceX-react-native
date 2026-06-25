@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Text } from 'react-native';
 import {
   useFonts,
+  RobotoCondensed_300Light,
   RobotoCondensed_400Regular,
   RobotoCondensed_500Medium,
   RobotoCondensed_700Bold,
@@ -14,6 +15,7 @@ export const unstable_settings = {
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
+    RobotoCondensed_300Light,
     RobotoCondensed_400Regular,
     RobotoCondensed_500Medium,
     RobotoCondensed_700Bold,

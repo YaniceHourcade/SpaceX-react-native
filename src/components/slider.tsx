@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginLeft: 24,
   },
   descriptionContainer: {
-    width: 240,
+    width: 260,
     height: 48, 
     justifyContent: 'center',
     alignItems: 'center',
@@ -144,9 +144,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     lineHeight: 24,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
     textAlign: 'center',
-    fontFamily: 'RobotoCondensed_400Regular',
+    fontFamily: 'RobotoCondensed_300Light',
   },
   flatList: {
     flex: 1,
