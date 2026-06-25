@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
 import { usePastLaunches, useUpcomingLaunches } from '../../../hooks/useLaunches';
@@ -37,7 +38,7 @@ export function HomeScreen() {
   const upcomingLaunch = upcomingLaunches[0];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar style="light" />
 
       <HomeTopBar />
@@ -80,7 +81,7 @@ export function HomeScreen() {
           <LaunchCard key={launch.id} launch={launch} />
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

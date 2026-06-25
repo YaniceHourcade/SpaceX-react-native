@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export function HomeTopBar() {
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>SPACEX</Text>
+      <Image
+        source={require('../../../../assets/images/spacex-logo-white.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
       <View style={styles.actions}>
-        <Ionicons name="bookmark-outline" size={18} color="#FFFFFF" />
-        <Ionicons name="calendar-outline" size={18} color="#FFFFFF" />
+        <Ionicons name="bookmark-outline" size={20} color="#FFFFFF" />
+        <Ionicons name="sparkles-outline" size={20} color="#FFFFFF" />
       </View>
     </View>
   );
@@ -25,10 +29,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   logo: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '800',
-    letterSpacing: 4,
+    width: 180,
+    height: '100%',
   },
   actions: {
     flexDirection: 'row',
