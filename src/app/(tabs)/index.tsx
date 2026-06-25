@@ -1,26 +1,9 @@
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
-import { useAsyncStorage } from '../../hooks/use-async-storage';
+import { useRouter } from 'expo-router';
 
 export default function Home() {
   const router = useRouter();
-  const [onboardingCompleted, setOnboardingCompleted, onboardingCompletedLoading] =
-    useAsyncStorage('onboardingCompleted', false);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!onboardingCompleted && !onboardingCompletedLoading) {
-        router.replace('/onboarding');
-      }
-    }, [onboardingCompleted, onboardingCompletedLoading, router]),
-  );
-
-  if (!onboardingCompleted || onboardingCompletedLoading) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -30,12 +13,11 @@ export default function Home() {
 
       <Pressable
         onPress={async () => {
-          await setOnboardingCompleted(false);
-          router.replace('/onboarding');
+          router.replace('/splash');
         }}
         style={styles.resetButton}
       >
-        <Text style={styles.resetText}>Revoir l&apos;onboarding</Text>
+        <Text style={styles.resetText}>Revoir le splash</Text>
       </Pressable>
     </View>
   );
@@ -57,6 +39,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#D9D9D9',
     marginTop: 8,
+    fontFamily: 'RobotoCondensed_400Regular',
   },
   resetButton: {
     marginTop: 24,
@@ -66,5 +49,6 @@ const styles = StyleSheet.create({
   resetText: {
     color: '#AAAAAA',
     fontSize: 14,
+    fontFamily: 'RobotoCondensed_400Regular',
   },
 });

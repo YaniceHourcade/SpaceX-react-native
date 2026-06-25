@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     letterSpacing: 1,
     textAlign: 'center',
+    fontFamily: 'RobotoCondensed_400Regular',
   },
   flatList: {
     flex: 1,

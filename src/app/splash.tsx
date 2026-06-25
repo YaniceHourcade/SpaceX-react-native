@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Animated, Dimensions, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-
-import { useAsyncStorage } from '../hooks/use-async-storage';
 
 const { width, height } = Dimensions.get('window');
 const animationImage = require('../../assets/images/animation.png');
@@ -15,27 +13,9 @@ export const options = {
 
 export default function Splash() {
   const router = useRouter();
-  const [onboardingCompleted, setOnboardingCompleted, onboardingCompletedLoading] = useAsyncStorage(
-    'onboardingCompleted',
-    false,
-  );
-  const [splashVisible, setSplashVisible] = useState(false);
   const animation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (onboardingCompletedLoading || onboardingCompleted) {
-      return;
-    }
-    if (!splashVisible) {
-      setSplashVisible(true);
-    }
-  }, [onboardingCompleted, onboardingCompletedLoading, splashVisible]);
-
-  useEffect(() => {
-    if (!splashVisible) {
-      return;
-    }
-
     animation.setValue(0);
     Animated.timing(animation, {
       toValue: splashTargetY,
@@ -44,28 +24,20 @@ export default function Splash() {
     }).start(() => {
       router.replace('/onboarding');
     });
-  }, [animation, router, splashVisible]);
+  }, [animation, router]);
 
-  if (onboardingCompletedLoading) {
-    return null;
-  }
-
-  if (splashVisible) {
-    return (
-      <View style={styles.container}>
-        <StatusBar style="light" />
-        <View style={styles.clip}>
-          <Animated.Image
-            source={animationImage}
-            style={[styles.image, { transform: [{ translateY: animation }] }]}
-            resizeMode="cover"
-          />
-        </View>
+  return (
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      <View style={styles.clip}>
+        <Animated.Image
+          source={animationImage}
+          style={[styles.image, { transform: [{ translateY: animation }] }]}
+          resizeMode="cover"
+        />
       </View>
-    );
-  }
-
-  return null;
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -81,7 +53,7 @@ const styles = StyleSheet.create({
     width,
     height: height * 3,
     position: 'absolute',
-    top: 170,
+    top: 175,
     left: 0,
   },
 });
