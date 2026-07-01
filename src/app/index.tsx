@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
 
-    router.replace('/home');
+    router.replace('/Home');
   }, [router]);
 
   return null;

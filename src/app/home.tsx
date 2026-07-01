@@ -1,21 +1,17 @@
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-
 import { usePastLaunches, useUpcomingLaunches } from '../hooks/useLaunches';
 import { HomeTopBar } from '../components/HomeTopBar';
 import { LaunchCard } from '../components/LaunchCard';
 import { LaunchCardSkeleton } from '../components/LaunchCardSkeleton';
 
-export default function HomeScreen() {
+export default function Home() {
   const {
     launches: upcomingLaunches,
     loading: upcomingLoading,
@@ -41,7 +37,6 @@ export default function HomeScreen() {
 
   return (
      <SafeAreaView style={styles.container} edges={['top']}>
-      <StatusBar style="light" />
       <HomeTopBar />
       <FlatList
         data={pastLaunches}
@@ -114,9 +109,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: '#ffffff',
     fontFamily: 'RobotoCondensed_700Bold',
-    fontSize: 13,
-    letterSpacing: 1.4,
-    marginBottom: 10,
+    fontSize: 14,
+    letterSpacing: 1.5,
+    paddingBottom: 15,
+    paddingTop: 8,
     textTransform: 'uppercase',
     opacity: 0.6,
   },

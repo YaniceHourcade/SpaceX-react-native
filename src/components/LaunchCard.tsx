@@ -6,10 +6,18 @@ import { Launch } from '../types/spacedevs';
 type LaunchCardProps = {
   launch: Launch;
   large?: boolean;
+  index?: number;
+  animated?: boolean;
 };
 
-export function LaunchCard({ launch, large = false }: LaunchCardProps) {
+export function LaunchCard({
+  launch,
+  large = false,
+  index = 0,
+  animated = true,
+}: LaunchCardProps) {
   const date = formatLaunchDate(launch.net);
+  const imageUri = launch.image ?? undefined;
 
   return (
     <Animated.View entering={FadeInUp.duration(350)} style={styles.cardWrapper}>
@@ -66,9 +74,9 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     borderRadius: 16,
     backgroundColor: 'transparent',
-    shadowColor: '#ffffff62',
+    shadowColor: '#ffffff14',
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 1,
     shadowRadius: 20,
     elevation: 4,
   },
@@ -84,7 +92,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   image: {
-    borderRadius: 16,
+    borderRadius: 12,
+  },
+  emptyImage: {
+    flex: 1,
   },
   content: {
     flex: 1,
