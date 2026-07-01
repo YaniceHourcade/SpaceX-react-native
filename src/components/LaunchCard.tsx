@@ -1,6 +1,7 @@
 import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useRouter } from 'expo-router';
 import { Launch } from '../types/spacedevs';
 
 type LaunchCardProps = {
@@ -16,6 +17,7 @@ export function LaunchCard({
   index = 0,
   animated = true,
 }: LaunchCardProps) {
+  const router = useRouter();
   const date = formatLaunchDate(launch.net);
   const imageUri = launch.image ?? undefined;
 
@@ -23,7 +25,13 @@ export function LaunchCard({
     <Animated.View entering={FadeInUp.duration(350)} style={styles.cardWrapper}>
       <Pressable
         style={styles.pressable}
-        onPress={() => console.log('Launch:', launch.name)}
+        onPress={() => {
+          const search = new URLSearchParams({
+            id: launch.id,
+            name: launch.name,
+          }).toString();
+          router.push(`/launchDetail?${search}`);
+        }}
         android_ripple={{ color: '#ffffff0a' }}
       >
         <ImageBackground
