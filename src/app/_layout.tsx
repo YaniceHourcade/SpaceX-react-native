@@ -1,4 +1,5 @@
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
+import { Text } from 'react-native';
 import {
   useFonts,
   RobotoCondensed_300Light,
@@ -25,5 +26,19 @@ export default function Layout() {
     return null;
   }
 
-  return <Slot />;
+  const text = Text as typeof Text & { defaultProps?: { style?: unknown } };
+  text.defaultProps = text.defaultProps || {};
+  text.defaultProps.style = [
+    { fontFamily: 'RobotoCondensed_400Regular' },
+    ...(Array.isArray(text.defaultProps.style)
+      ? text.defaultProps.style
+      : [text.defaultProps.style].filter(Boolean)),
+  ];
+
+  return ( 
+    <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="onboarding" options={{ animation: 'none' }} />
+      <Stack.Screen name="splash" options={{ animation: 'fade' }} />
+    </Stack>
+  );
 }
