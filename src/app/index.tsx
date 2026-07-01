@@ -1,3 +1,14 @@
-import { HomeScreen } from '../sceens/HomeScreen';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
-export default HomeScreen;
+
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+
+    router.replace('/home');
+  }, [router]);
+
+  return null;
+}

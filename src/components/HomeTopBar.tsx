@@ -14,18 +14,13 @@ export function HomeTopBar() {
       <View style={styles.actions}>
         <Pressable
           style={styles.iconButton}
-          onPress={() => console.log('Favoris')}
-          hitSlop={10}
-        >
-          <Ionicons name="bookmark-outline" size={24} color="#ffffff" />
-        </Pressable>
-
-        <Pressable
-          style={styles.iconButton}
           onPress={() => router.push('/chatAI')}
           hitSlop={10}
         >
-          <Ionicons name="sparkles-outline" size={24} color="#ffffff" />
+          <Image
+            source={require('../../assets/images/bot.png')}
+            style={styles.icon}
+          />
         </Pressable>
       </View>
     </View>
@@ -34,28 +29,30 @@ export function HomeTopBar() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 56,
+    height: 72,
     paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1A1A1A',
+    paddingVertical: 24,
+    backgroundColor: "transparent",
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   logo: {
-    width: 163.58,
+    width: 163,
     height: 20,
   },
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 18,
   },
   iconButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  icon: {
+    width: 24,
+    height: 24,
   },
 });

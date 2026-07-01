@@ -1,5 +1,6 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { FadeInUp } from 'react-native-reanimated';
 import { Launch } from '../types/spacedevs';
 
 type LaunchCardProps = {
@@ -11,28 +12,38 @@ export function LaunchCard({ launch, large = false }: LaunchCardProps) {
   const date = formatLaunchDate(launch.net);
 
   return (
-    <ImageBackground
-      source={
-        launch.image
-          ? { uri: launch.image }
-          : require('../../assets/images/launch-placeholder.png')
-      }
-      style={[styles.card, large && styles.largeCard]}
-      imageStyle={styles.image}
-      resizeMode="cover"
-    >
-      <LinearGradient
-        colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
-        style={StyleSheet.absoluteFillObject}
-      />
+    <Animated.View entering={FadeInUp.duration(350)} style={styles.cardWrapper}>
+      <Pressable
+        style={styles.pressable}
+        onPress={() => console.log('Launch:', launch.name)}
+        android_ripple={{ color: '#ffffff0a' }}
+      >
+        <ImageBackground
+          source={
+            launch.image
+              ? { uri: launch.image }
+              : require('../../assets/images/noImage.png')
+          }
+          style={[styles.card]}
+          imageStyle={styles.image}
+          resizeMode="cover"
+        >
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.43)', 'rgba(0, 0, 0, 0)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={StyleSheet.absoluteFillObject}
+          />
 
-      <View style={styles.content}>
-        <Text style={styles.date}>{date}</Text>
-        <Text numberOfLines={2} style={styles.title}>
-          {launch.name}
-        </Text>
-      </View>
-    </ImageBackground>
+          <View style={styles.content}>
+            <Text style={styles.date}>{date}</Text>
+            <Text numberOfLines={2} style={styles.title}>
+              {launch.name}
+            </Text>
+          </View>
+        </ImageBackground>
+      </Pressable>
+    </Animated.View>
   );
 }
 
@@ -51,15 +62,26 @@ function formatLaunchDate(value?: string | null) {
 }
 
 const styles = StyleSheet.create({
+  cardWrapper: {
+    marginBottom: 14,
+    borderRadius: 16,
+    backgroundColor: 'transparent',
+    shadowColor: '#ffffff62',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 4,
+  },
   card: {
     height: 180,
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#111111',
-    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#ffffff1a',
   },
-  largeCard: {
-    height: 180,
+  pressable: {
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   image: {
     borderRadius: 16,
@@ -67,23 +89,22 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingHorizontal: 16,
-    paddingBottom: 14,
+    gap: 10,
+    paddingHorizontal: 20,
+    marginBottom: 25,
   },
   date: {
     color: '#60BCF0',
-    fontFamily: 'Roboto Condensed',
-    fontSize: 9,
-    fontWeight: '500',
-    letterSpacing: 1,
-    marginBottom: 4,
+    fontFamily: 'RobotoCondensed_500Medium',
+    fontSize: 12,
+    letterSpacing: 1.3,
+    textTransform: 'uppercase',
   },
   title: {
     color: '#FFFFFF',
-    fontFamily: 'Roboto Condensed',
-    fontSize: 14,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontFamily: 'RobotoCondensed_700Bold',
+    fontSize: 17,
+    letterSpacing: 0.6,
     textTransform: 'uppercase',
   },
 });
