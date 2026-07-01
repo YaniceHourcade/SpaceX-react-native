@@ -1,4 +1,4 @@
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { HomeTopBar } from '../components/HomeTopBar';
@@ -7,37 +7,38 @@ export default function LaunchDetail() {
   const searchParams = useLocalSearchParams();
   const id = Array.isArray(searchParams.id) ? searchParams.id[0] : searchParams.id;
   const name = Array.isArray(searchParams.name) ? searchParams.name[0] : searchParams.name;
+  const image = Array.isArray(searchParams.image) ? searchParams.image[0] : searchParams.image;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <HomeTopBar />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.heading}>{name ?? 'Détails du lancement'}</Text>
+      <ImageBackground
+          source={image ? { uri: image } : require('../../assets/images/noImage.png')}
+          style={styles.detailImage}
+          resizeMode="cover">
+        <HomeTopBar />
+        <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.heading}>{name ?? 'Détails du lancement'}</Text>
 
-        <View style={styles.detailCard}>
-          <Image
-            source={require('../../assets/images/noImage.png')}
-            style={styles.detailImage}
-            resizeMode="cover"
-          />
-          <View style={styles.detailBody}>
-            <Text style={styles.detailTitle}>{name ?? 'Nom non disponible'}</Text>
-            <Text style={styles.detailSubtitle}>Launch ID</Text>
-            <Text style={styles.detailText}>{id ?? 'Inconnu'}</Text>
-          </View>
-        </View>
+            <View style={styles.detailCard}>
+            <View style={styles.detailBody}>
+                <Text style={styles.detailTitle}>{name ?? 'Nom non disponible'}</Text>
+                <Text style={styles.detailSubtitle}>Launch ID</Text>
+                <Text style={styles.detailText}>{id ?? 'Inconnu'}</Text>
+            </View>
+            </View>
 
-        <Text style={styles.sectionTitle}>À propos</Text>
-        <Text style={styles.detailText}>
-          Cette page affiche un exemple de détail pour le lancement sélectionné.
-          Tu peux remplacer ce contenu par des données récupérées via l'API en utilisant l'ID du lancement.
-        </Text>
+            <Text style={styles.sectionTitle}>À propos</Text>
+            <Text style={styles.detailText}>
+            Cette page affiche un exemple de détail pour le lancement sélectionné.
+            Tu peux remplacer ce contenu par des données récupérées via l'API en utilisant l'ID du lancement.
+            </Text>
 
-        <Text style={styles.sectionTitle}>Actions</Text>
-        <Text style={styles.detailText}>
-          Utilise le bouton de retour du navigateur ou la navigation Expo pour revenir à la liste.
-        </Text>
-      </ScrollView>
+            <Text style={styles.sectionTitle}>Actions</Text>
+            <Text style={styles.detailText}>
+            Utilise le bouton de retour du navigateur ou la navigation Expo pour revenir à la liste.
+            </Text>
+        </ScrollView> 
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   },
   detailImage: {
     width: '100%',
-    height: 180,
+    height: '85%',
   },
   detailBody: {
     padding: 16,

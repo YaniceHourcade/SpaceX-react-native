@@ -19,7 +19,6 @@ export function LaunchCard({
 }: LaunchCardProps) {
   const router = useRouter();
   const date = formatLaunchDate(launch.net);
-  const imageUri = launch.image ?? undefined;
 
   return (
     <Animated.View entering={FadeInUp.duration(350)} style={styles.cardWrapper}>
@@ -29,6 +28,7 @@ export function LaunchCard({
           const search = new URLSearchParams({
             id: launch.id,
             name: launch.name,
+            image: launch.image || '',
           }).toString();
           router.push(`/launchDetail?${search}`);
         }}
