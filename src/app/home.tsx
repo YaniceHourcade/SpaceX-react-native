@@ -1,15 +1,9 @@
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { usePastLaunches, useUpcomingLaunches } from '../hooks/useLaunches';
-import { HomeTopBar } from '../components/HomeTopBar';
-import { LaunchCard } from '../components/LaunchCard';
-import { LaunchCardSkeleton } from '../components/LaunchCardSkeleton';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { usePastLaunches, useUpcomingLaunches } from "../hooks/useLaunches";
+import { HomeTopBar } from "../components/HomeTopBar";
+import { LaunchCard } from "../components/LaunchCard";
+import { LaunchCardSkeleton } from "../components/LaunchCardSkeleton";
 
 export default function Home() {
   const {
@@ -24,7 +18,7 @@ export default function Home() {
     loading: pastLoading,
     error: pastError,
     fetch: refetchPast,
-  } = usePastLaunches({ limit: 100 });
+  } = usePastLaunches({ limit: 15 });
 
   const loading = upcomingLoading || pastLoading;
   const error = upcomingError || pastError;
@@ -36,7 +30,7 @@ export default function Home() {
   const upcomingLaunch = upcomingLaunches[0];
 
   return (
-     <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <HomeTopBar />
       <FlatList
         data={pastLaunches}
@@ -79,9 +73,8 @@ export default function Home() {
               </>
             ) : null}
 
-
             {pastLaunches.length > 0 ? (
-                <Text style={styles.sectionTitle}>PAST LAUNCHES</Text>
+              <Text style={styles.sectionTitle}>PAST LAUNCHES</Text>
             ) : null}
           </>
         }
@@ -99,7 +92,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: "#000000",
   },
   listContent: {
     paddingHorizontal: 16,
@@ -107,44 +100,44 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   sectionTitle: {
-    color: '#ffffff',
-    fontFamily: 'RobotoCondensed_700Bold',
+    color: "#ffffff",
+    fontFamily: "RobotoCondensed_700Bold",
     fontSize: 14,
     letterSpacing: 1.5,
     paddingBottom: 15,
     paddingTop: 8,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     opacity: 0.6,
   },
   center: {
     minHeight: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   loadingText: {
-    color: '#AAAAAA',
+    color: "#AAAAAA",
     marginTop: 12,
     fontSize: 13,
   },
   errorBox: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: "#1A1A1A",
     borderRadius: 12,
     padding: 14,
     marginBottom: 16,
   },
   errorTitle: {
-    color: '#FFFFFF',
-    fontWeight: '800',
+    color: "#FFFFFF",
+    fontWeight: "800",
     marginBottom: 4,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: "#FF6B6B",
     fontSize: 13,
   },
   emptyText: {
-    color: '#AAAAAA',
+    color: "#AAAAAA",
     fontSize: 13,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 12,
   },
 });
