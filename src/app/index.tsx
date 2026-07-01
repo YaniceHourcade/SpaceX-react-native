@@ -1,24 +1,25 @@
-import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { useEffect } from "react";
+import { useRouter } from "expo-router";
 
-import { useAsyncStorage } from '../hooks/use-async-storage';
+import { useAsyncStorage } from "../hooks/use-async-storage";
 
-export default function Home() {
+export default function App() {
   const router = useRouter();
-  const [onboardingCompleted, , onboardingCompletedLoading] = useAsyncStorage('onboardingCompleted', false);
+
+  const [hasSeenOnboarding, , loading] = useAsyncStorage<boolean>(
+    "hasSeenOnboarding",
+    false,
+  );
 
   useEffect(() => {
-    if (onboardingCompletedLoading) {
-      return;
-    }
+    if (loading) return;
 
-    if (onboardingCompleted) {
-      router.replace('/(tabs)');
-      return;
+    if (hasSeenOnboarding) {
+      router.replace("/home");
+    } else {
+      router.replace("/splash");
     }
-
-    router.replace('/splash');
-  }, [onboardingCompleted, onboardingCompletedLoading, router]);
+  }, [loading, hasSeenOnboarding, router]);
 
   return null;
 }
