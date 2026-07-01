@@ -1,41 +1,183 @@
-import {
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { useMemo, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
+import { colors } from '../constants/colors';
 import { usePastLaunches, useUpcomingLaunches } from '../hooks/useLaunches';
-import { HomeTopBar } from '../components/HomeTopBar';
+import { Launch } from '../types/spacedevs';
+import { HomeTopBar } from '../components/ListHeaderComponent';
 import { LaunchCard } from '../components/LaunchCard';
+import { LaunchCardSkeleton } from '../components/LaunchCardSkeleton';
+
+type HomeListItem =
+  | {
+      type: 'section';
+      id: string;
+      title: string;
+    }
+  | {
+      type: 'launch';
+      id: string;
+      launch: Launch;
+      animationIndex: number;
+    }
+  | {
+      type: 'skeleton';
+      id: string;
+    }
+  | {
+      type: 'empty';
+      id: string;
+      title: string;
+      text: string;
+    }
+  | {
+      type: 'error';
+      id: string;
+      message: string;
+    };
 
 export function HomeScreen() {
+  const [refreshVersion, setRefreshVersion] = useState(0);
+
   const {
     launches: upcomingLaunches,
     loading: upcomingLoading,
     error: upcomingError,
     fetch: refetchUpcoming,
-  } = useUpcomingLaunches({ limit: 5 });
+  } = useUpcomingLaunches({ limit: 10 });
 
   const {
     launches: pastLaunches,
     loading: pastLoading,
     error: pastError,
     fetch: refetchPast,
-  } = usePastLaunches({ limit: 5 });
+  } = usePastLaunches({ limit: 10 });
 
   const loading = upcomingLoading || pastLoading;
   const error = upcomingError || pastError;
 
   const handleRefresh = async () => {
     await Promise.all([refetchUpcoming(), refetchPast()]);
+    setRefreshVersion((current) => current + 1);
   };
 
-  const upcomingLaunch = upcomingLaunches[0];
+  const listData = useMemo<HomeListItem[]>(() => {
+    const items: HomeListItem[] = [];
+
+    if (error) {
+      items.push({
+        type: 'error',
+        id: 'error',
+        message: error,
+      });
+    }
+
+    items.push({
+      type: 'section',
+      id: 'upcoming-title',
+      title: 'UPCOMING LAUNCHES',
+    });
+
+    if (upcomingLoading && upcomingLaunches.length === 0) {
+      items.push(
+        { type: 'skeleton', id: 'upcoming-skeleton-1' },
+        { type: 'skeleton', id: 'upcoming-skeleton-2' },
+        { type: 'skeleton', id: 'upcoming-skeleton-3' },
+      );
+    } else if (upcomingLaunches.length > 0) {
+      upcomingLaunches.forEach((launch, index) => {
+        items.push({
+          type: 'launch',
+          id: `upcoming-${launch.id}`,
+          launch,
+          animationIndex: index,
+        });
+      });
+    } else {
+      items.push({
+        type: 'empty',
+        id: 'upcoming-empty',
+        title: 'Aucun lancement à venir',
+        text: 'Impossible de récupérer les prochains lancements pour le moment.',
+      });
+    }
+
+    items.push({
+      type: 'section',
+      id: 'past-title',
+      title: 'PAST LAUNCHES',
+    });
+
+    if (pastLoading && pastLaunches.length === 0) {
+      items.push(
+        { type: 'skeleton', id: 'past-skeleton-1' },
+        { type: 'skeleton', id: 'past-skeleton-2' },
+        { type: 'skeleton', id: 'past-skeleton-3' },
+      );
+    } else if (pastLaunches.length > 0) {
+      pastLaunches.forEach((launch, index) => {
+        items.push({
+          type: 'launch',
+          id: `past-${launch.id}`,
+          launch,
+          animationIndex: index,
+        });
+      });
+    } else {
+      items.push({
+        type: 'empty',
+        id: 'past-empty',
+        title: 'Aucun ancien lancement',
+        text: 'Les données sont vides ou n’ont pas pu être récupérées.',
+      });
+    }
+
+    return items;
+  }, [
+    error,
+    upcomingLoading,
+    upcomingLaunches,
+    pastLoading,
+    pastLaunches,
+  ]);
+
+  const renderItem = ({ item }: { item: HomeListItem }) => {
+    if (item.type === 'section') {
+      return <Text style={styles.sectionTitle}>{item.title}</Text>;
+    }
+
+    if (item.type === 'launch') {
+      return (
+        <LaunchCard
+          launch={item.launch}
+          index={item.animationIndex}
+          animated
+        />
+      );
+    }
+
+    if (item.type === 'skeleton') {
+      return <LaunchCardSkeleton />;
+    }
+
+    if (item.type === 'error') {
+      return (
+        <View style={styles.errorBox}>
+          <Text style={styles.errorTitle}>Erreur</Text>
+          <Text style={styles.errorText}>{item.message}</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.emptyBox}>
+        <Text style={styles.emptyTitle}>{item.title}</Text>
+        <Text style={styles.emptyText}>{item.text}</Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -43,44 +185,25 @@ export function HomeScreen() {
 
       <HomeTopBar />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+      <FlatList
+        data={listData}
+        keyExtractor={(item) => `${item.id}-${refreshVersion}`}
+        renderItem={renderItem}
         refreshControl={
           <RefreshControl
             refreshing={loading}
             onRefresh={handleRefresh}
-            tintColor="#FFFFFF"
+            tintColor={colors.white}
           />
         }
-      >
-        {loading && !upcomingLaunch && pastLaunches.length === 0 ? (
-          <View style={styles.center}>
-            <ActivityIndicator color="#FFFFFF" />
-            <Text style={styles.loadingText}>Chargement des lancements...</Text>
-          </View>
-        ) : null}
-
-        {error ? (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorTitle}>Erreur</Text>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        ) : null}
-
-        {upcomingLaunch ? (
-          <>
-            <Text style={styles.sectionTitle}>UPCOMING LAUNCH</Text>
-            <LaunchCard launch={upcomingLaunch} large />
-          </>
-        ) : null}
-
-        <Text style={styles.sectionTitle}>PAST LAUNCHES</Text>
-
-        {pastLaunches.map((launch) => (
-          <LaunchCard key={launch.id} launch={launch} />
-        ))}
-      </ScrollView>
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={8}
+        maxToRenderPerBatch={5}
+        windowSize={7}
+        removeClippedSubviews
+        extraData={refreshVersion}
+      />
     </SafeAreaView>
   );
 }
@@ -88,46 +211,56 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: colors.background,
   },
-  scrollContent: {
+  listContent: {
     paddingHorizontal: 16,
     paddingTop: 18,
     paddingBottom: 32,
   },
   sectionTitle: {
-    color: '#ffffff',
-    fontFamily: 'Roboto Condensed',
+    color: colors.textMuted,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '900',
     letterSpacing: 1.2,
     marginBottom: 10,
+    marginTop: 4,
     textTransform: 'uppercase',
-    opacity: 0.6,
-  },
-  center: {
-    minHeight: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingText: {
-    color: '#AAAAAA',
-    marginTop: 12,
-    fontSize: 13,
   },
   errorBox: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: colors.border,
     borderRadius: 12,
     padding: 14,
     marginBottom: 16,
   },
   errorTitle: {
-    color: '#FFFFFF',
+    color: colors.textPrimary,
     fontWeight: '800',
     marginBottom: 4,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 13,
+  },
+  emptyBox: {
+    minHeight: 120,
+    borderRadius: 12,
+    backgroundColor: colors.cardBackground,
+    padding: 16,
+    marginBottom: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    color: colors.textPrimary,
+    fontWeight: '800',
+    fontSize: 15,
+    marginBottom: 8,
+  },
+  emptyText: {
+    color: colors.textSecondary,
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: 19,
   },
 });
